@@ -1,0 +1,6 @@
+interface:
+  display_name: "[Gardner's Vault] PE/VC私募交易文件审阅"
+  short_description: "审阅未上市股权融资文件，跟踪多轮红线、跨文件冲突与回应程度"
+  default_prompt: "请使用 $pe-vc-transaction-docs-review 审阅或比较我上传的未上市公司股权融资文件；需要最终交付时，先生成律师确认单，并仅在律师确认后生成最终 Word 报告。"
+policy:
+  allow_implicit_invocation: true

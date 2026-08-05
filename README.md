@@ -46,3 +46,4 @@ python3 scripts/runtime_self_check.py --confirmation-word-mode --format json
 本 Skill 是律师工作辅助工具，不替代负责律师的事实核验、法律判断或签署决定。任何供客户或交易对方使用的最终结论、红线、批注和报告，均应完成适用的律师确认及质量闸门。
 
 仓库不包含客户文件、律师返回确认件、项目测试对话或事项专属决定。
+

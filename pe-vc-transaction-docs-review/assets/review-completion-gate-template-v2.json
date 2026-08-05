@@ -1,0 +1,98 @@
+{
+  "schema_version": 2,
+  "skill_version": "0.1.16",
+  "matter_id": "replace-with-matter-id",
+  "review_mode": "first_round",
+  "checkpoint": "review-state.json",
+  "source_files": [
+    "source/agreement.docx"
+  ],
+  "requirements": {
+    "major_issue_list": true,
+    "package_matrix": true,
+    "native_comments": false
+  },
+  "artifacts": {
+    "issue_log": "output/issue-log.csv",
+    "major_issue_list": "output/major-issue-list.csv",
+    "package_matrix": "output/package-matrix.json",
+    "comment_apply_report": null,
+    "deliverables": [
+      "output/final-report.docx"
+    ]
+  },
+  "lawyer_confirmation": {
+    "applicability": "required",
+    "trigger_evidence": {
+      "trigger": "final_report",
+      "evidence": "Record the user request and delivery scope that triggered confirmation."
+    },
+    "artifact_state": "final",
+    "limitation_disclosure": "",
+    "evidence": {
+      "base_manifest": {
+        "path": "confirmation/base-manifest.json",
+        "sha256": "replace-with-current-sha256"
+      },
+      "active_import_record": {
+        "path": "confirmation/import-store/import-current.json",
+        "sha256": "replace-with-current-sha256"
+      },
+      "import_store": "confirmation/import-store",
+      "approved_content": {
+        "path": "confirmation/approved-content.json",
+        "sha256": "replace-with-current-sha256"
+      },
+      "report_model": {
+        "path": "confirmation/report-model.json",
+        "sha256": "replace-with-current-sha256"
+      },
+      "confirmation_pack_manifest": {
+        "path": "confirmation/confirmation.pack-manifest.json",
+        "sha256": "replace-with-current-sha256"
+      },
+      "confirmation_docx": {
+        "path": "confirmation/confirmation-form.docx",
+        "sha256": "replace-with-current-sha256"
+      },
+      "confirmation_word_qa": {
+        "path": "confirmation/confirmation-word-qa.json",
+        "sha256": "replace-with-current-sha256"
+      },
+      "confirmation_render_dir": "confirmation/rendered",
+      "final_docx": {
+        "path": "output/final-report.docx",
+        "sha256": "replace-with-current-sha256"
+      },
+      "final_word_qa": {
+        "path": "output/final-word-qa.json",
+        "sha256": "replace-with-current-sha256"
+      },
+      "final_render_dir": "output/rendered"
+    }
+  },
+  "judgment_gates": {
+    "matter_and_authority": {
+      "status": "passed",
+      "reviewer": "reviewing-agent-or-designated-reviewer",
+      "evidence": "Matter, side, scope, governing law, assumptions and version baseline checked."
+    },
+    "substantive_coverage": {
+      "status": "passed",
+      "reviewer": "reviewing-agent-or-designated-reviewer",
+      "evidence": "Every applicable clause family is marked reviewed, not applicable, missing or deferred."
+    },
+    "high_risk_spot_check": {
+      "status": "passed",
+      "reviewer": "reviewing-agent-or-designated-reviewer",
+      "evidence": "Every high-risk recommendation was checked against current text, client side and current authority."
+    },
+    "delivery_and_confidentiality": {
+      "status": "passed",
+      "reviewer": "reviewing-agent-or-designated-reviewer",
+      "evidence": "Requested output mode, source integrity, final files, limitations and confidentiality scan checked."
+    }
+  },
+  "limitations": [],
+  "forbidden_terms": []
+}
