@@ -45,8 +45,8 @@ content package、四类投影、report model 和最终 Word；未通过确认�
 | `defer_research` | 待法律研究/当地律师 | 不作为已批准结论，只进入法律待决投影 |
 | `not_applicable` | 本项目不适用 | 必须说明理由；不修改、不对外投影 |
 
-逐项决定优先于批量决定；例外 ID 必须列入批量卡。逐项与总体意见冲突时阻断，
-不得猜测。确认导入不改变 Major Issue 谈判状态或 Response Matrix 回应等级。
+逐项决定优先于批量决定；例外 ID 必须列入批量卡。补充意见只作说明，不能
+覆盖逐项决定。确认导入不改变 Major Issue 谈判状态或 Response Matrix 回应等级。
 
 ## 动作表
 
@@ -76,10 +76,14 @@ content package、四类投影、report model 和最终 Word；未通过确认�
 ## Word 字段与导入合同
 
 确认单至少含封面、说明及完成度、项目事实、法律与处理分析、常规实质批量确认、
-纯文本批量确认、律师新增关注点、未确认/冲突/缺材料摘要、总体意见和签名日期。
+律师新增关注点、未确认/冲突/缺材料摘要、补充意见、审阅人和日期。纯文本清理
+继续按逐项决定处理，不在内部 Word 中另设批量确认区。
 每个可编辑字段使用 SDT，tag 固定为
 `confirmation_batch_id/confirmation_id/field`。可编辑字段限于决定、律师原始
-意见、动作、四个投影、批量例外、总体意见和指定新增区；原生批注不能替代决定。
+意见、动作、四个投影、批量例外、补充意见、审阅人、日期和指定新增区；原生
+批注不能替代决定。新表单不显示 `confirmation_status` 和
+`overall_opinion_effect`：审阅人加有效日期在导入时形成内部 `confirm` 记录，
+补充意见固定按 `supplement_only` 处理。旧表单仍按原字段校验，以保持兼容。
 
 导入必须同时匹配 `matter_id`、`review_round`、批次、基础清单、源文件摘要、
 原生成件摘要、不可变可见内容摘要和 SDT manifest。返回 Word 完整哈希可以变化，

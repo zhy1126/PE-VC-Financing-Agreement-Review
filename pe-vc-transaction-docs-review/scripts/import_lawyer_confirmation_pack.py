@@ -285,6 +285,15 @@ def _response_projection(inspection: dict[str, Any], pack: dict[str, Any]) -> di
             subitems.setdefault(confirmation_id, {})[field] = value or (None if field == "lawyer_decision" else "")
         elif scope == "issue":
             issues.setdefault(confirmation_id, {})[field] = value
+    # New internal forms keep audit-only controls out of the Word UI.  Name plus
+    # a valid date records completion; free-text overall comments are always
+    # supplementary and cannot override the structured item decisions.
+    signoff_name = normalize_whitespace(str(overall.get("signoff_name", "")))
+    signoff_date = normalize_whitespace(str(overall.get("signoff_date", "")))
+    if "confirmation_status" not in overall and signoff_name and _valid_confirmation_date(signoff_date):
+        overall["confirmation_status"] = "confirm"
+    if "overall_opinion_effect" not in overall and normalize_whitespace(str(overall.get("overall_opinion", ""))):
+        overall["overall_opinion_effect"] = "supplement_only"
     return {
         "subitems": {key: subitems[key] for key in sorted(subitems)},
         "issues": {key: issues[key] for key in sorted(issues)},

@@ -444,8 +444,7 @@ def build_document(base: dict[str, Any]) -> tuple[Document, list[dict[str, Any]]
     _add_body(doc, "请在每个内容控件中填写。决定值必须使用表内列示的英文枚举；revise、reject 和 not_applicable 必须说明理由。原生批注只能作为补充。")
     required = [item for issue in base["issues"] for item in issue["subitems"] if item["required_for_final"]]
     facts = [item for issue in base["issues"] for item in issue["subitems"] if item["item_type"] == "fact"]
-    drafting = [item for issue in base["issues"] for item in issue["subitems"] if item["item_type"] == "drafting"]
-    _add_body(doc, f"完成度（生成时）：决策性必需事项 0/{len(required)}；事实事项 0/{len(facts)}；纯文本清理 0/{len(drafting)}。")
+    _add_body(doc, f"完成度（生成时）：决策性必需事项 0/{len(required)}；事实事项 0/{len(facts)}。")
 
     _add_heading(doc, "2. 项目事实问题", 1)
     for issue in base["issues"]:
@@ -465,11 +464,8 @@ def build_document(base: dict[str, Any]) -> tuple[Document, list[dict[str, Any]]
     _add_heading(doc, "4. 常规实质事项批量确认", 1)
     _add_body(doc, "逐项 Confirmation ID 优先于批量决定；逐项填写后，导入器会将该 ID 自动列入批量例外。")
     _add_batch_cards(doc, base, "regular_substantive", sdt_manifest)
-    _add_heading(doc, "5. 纯文本清理批量确认", 1)
-    _add_body(doc, "本节仅适用于文本执行事项，不得把事实或法律约束混入纯文本批量确认。")
-    _add_batch_cards(doc, base, "text_cleanup", sdt_manifest)
 
-    _add_heading(doc, "6. 律师新增关注点", 1)
+    _add_heading(doc, "5. 律师新增关注点", 1)
     new_table = doc.add_table(rows=1, cols=2)
     new_table.style = "Table Grid"
     _set_table_geometry(new_table, [LABEL_WIDTH_DXA, VALUE_WIDTH_DXA])
@@ -482,38 +478,20 @@ def build_document(base: dict[str, Any]) -> tuple[Document, list[dict[str, Any]]
                  field="new_issue_text", label="新增关注点", initial="（如有，请填写）",
                  allowed_values=None, manifest=sdt_manifest)
 
-    _add_heading(doc, "7. 未确认、冲突和缺材料摘要", 1)
+    _add_heading(doc, "6. 未确认、冲突和缺材料摘要", 1)
     unresolved = [item["confirmation_id"] for issue in base["issues"] for item in issue["subitems"] if item["required_for_final"] and item["lawyer_decision"] is None]
     _add_body(doc, f"未确认：{'、'.join(unresolved) if unresolved else '无'}；冲突：生成时未发现；缺材料：以基础清单和源文件集合为准。")
 
-    _add_heading(doc, "8. 律师总体意见、确认声明及日期", 1)
+    _add_heading(doc, "7. 补充意见及审阅信息", 1)
     overall = doc.add_table(rows=0, cols=2)
     overall.style = "Table Grid"
     _set_table_geometry(overall, [LABEL_WIDTH_DXA, VALUE_WIDTH_DXA])
     _add_sdt_row(overall, batch=base["confirmation_batch_id"], confirmation_id="OVERALL", card_id="OVERALL", scope="overall",
-                 field="overall_opinion", label="律师总体意见", initial="（可填写）",
+                 field="overall_opinion", label="补充意见（可选）", initial="（可填写）",
                  allowed_values=None, manifest=sdt_manifest)
-    _add_sdt_row(
-        overall,
-        batch=base["confirmation_batch_id"],
-        confirmation_id="OVERALL",
-        card_id="OVERALL",
-        scope="overall",
-        field="overall_opinion_effect",
-        label="总体意见效力（supplement_only / decision_override）",
-        initial="（请填写）",
-        allowed_values=["supplement_only", "decision_override"],
-        manifest=sdt_manifest,
-    )
-    _add_immutable_row(
-        overall,
-        label="确认声明",
-        value="总体意见原文仅供审计，其效力以结构化字段为准。本人已审阅上述内容；仅在下栏输入 confirm 后方构成确认。",
-    )
     overall_fields = [
-        ("confirmation_status", "确认状态（请输入 confirm）", "（请填写）", ["confirm"]),
-        ("signoff_name", "确认人", "（请填写）", None),
-        ("signoff_date", "确认日期（YYYY-MM-DD）", "（请填写）", None),
+        ("signoff_name", "审阅人", "（请填写）", None),
+        ("signoff_date", "日期（YYYY-MM-DD）", "（请填写）", None),
     ]
     for field, label, initial, allowed_values in overall_fields:
         _add_sdt_row(overall, batch=base["confirmation_batch_id"], confirmation_id="OVERALL", card_id="OVERALL", scope="overall",
