@@ -31,13 +31,15 @@ from lawyer_confirmation_schema import validate_manifest
 
 
 PRESET = "contract_negotiation_brief"
-BLUE = "2E74B5"
-DARK_BLUE = "1F4D78"
-INK = "0B2545"
-LIGHT_BLUE = "E8EEF5"
-LIGHT_GRAY = "F2F4F7"
-MUTED = "687386"
-GOLD = "7A5A00"
+ASCII_FONT = "Times New Roman"
+CHINESE_FONT = "宋体"
+BLUE = "000000"
+DARK_BLUE = "000000"
+INK = "000000"
+LIGHT_BLUE = "F2F2F2"
+LIGHT_GRAY = "F2F2F2"
+MUTED = "666666"
+GOLD = "000000"
 TABLE_WIDTH_DXA = 9360
 TABLE_INDENT_DXA = 120
 LABEL_WIDTH_DXA = 2700
@@ -45,15 +47,14 @@ VALUE_WIDTH_DXA = TABLE_WIDTH_DXA - LABEL_WIDTH_DXA
 
 
 def _set_run_font(run, size: float = 11, *, bold: bool = False, color: str = "000000") -> None:
-    # Named override for CJK runs: the renderer can load Arial Unicode MS
-    # reliably, while retaining the preset's Calibri face for Latin-only runs.
-    face = "Arial Unicode MS" if any(ord(character) > 127 for character in run.text) else "Calibri"
-    run.font.name = face
-    run._element.get_or_add_rPr().get_or_add_rFonts().set(qn("w:ascii"), face)
-    run._element.get_or_add_rPr().get_or_add_rFonts().set(qn("w:hAnsi"), face)
+    # Plain law-firm override: Latin characters and numbers use Times New Roman;
+    # Word selects SimSun for East Asian glyphs even when both occur in one run.
+    run.font.name = ASCII_FONT
+    run._element.get_or_add_rPr().get_or_add_rFonts().set(qn("w:ascii"), ASCII_FONT)
+    run._element.get_or_add_rPr().get_or_add_rFonts().set(qn("w:hAnsi"), ASCII_FONT)
     r_pr = run._element.get_or_add_rPr()
     r_fonts = r_pr.get_or_add_rFonts()
-    r_fonts.set(qn("w:eastAsia"), "Arial Unicode MS")
+    r_fonts.set(qn("w:eastAsia"), CHINESE_FONT)
     r_fonts.set(qn("w:hint"), "eastAsia")
     lang = r_pr.find(qn("w:lang"))
     if lang is None:
@@ -170,10 +171,9 @@ def _plain_sdt(paragraph, *, tag: str, alias: str, initial: str) -> None:
     run = OxmlElement("w:r")
     run_pr = OxmlElement("w:rPr")
     fonts = OxmlElement("w:rFonts")
-    face = "Arial Unicode MS" if any(ord(character) > 127 for character in initial) else "Calibri"
-    fonts.set(qn("w:ascii"), face)
-    fonts.set(qn("w:hAnsi"), face)
-    fonts.set(qn("w:eastAsia"), "Arial Unicode MS")
+    fonts.set(qn("w:ascii"), ASCII_FONT)
+    fonts.set(qn("w:hAnsi"), ASCII_FONT)
+    fonts.set(qn("w:eastAsia"), CHINESE_FONT)
     fonts.set(qn("w:hint"), "eastAsia")
     run_pr.append(fonts)
     color = OxmlElement("w:color")
@@ -370,8 +370,10 @@ def _add_batch_cards(doc, base: dict[str, Any], category: str,
 
 def _configure_styles(doc: Document) -> None:
     normal = doc.styles["Normal"]
-    normal.font.name = "Calibri"
-    normal._element.rPr.rFonts.set(qn("w:eastAsia"), "Arial Unicode MS")
+    normal.font.name = ASCII_FONT
+    normal._element.rPr.rFonts.set(qn("w:ascii"), ASCII_FONT)
+    normal._element.rPr.rFonts.set(qn("w:hAnsi"), ASCII_FONT)
+    normal._element.rPr.rFonts.set(qn("w:eastAsia"), CHINESE_FONT)
     normal._element.rPr.rFonts.set(qn("w:hint"), "eastAsia")
     normal.font.size = Pt(11)
     normal.paragraph_format.space_before = Pt(0)
@@ -384,8 +386,10 @@ def _configure_styles(doc: Document) -> None:
     }
     for name, (size, color, before, after) in tokens.items():
         style = doc.styles[name]
-        style.font.name = "Calibri"
-        style._element.rPr.rFonts.set(qn("w:eastAsia"), "Arial Unicode MS")
+        style.font.name = ASCII_FONT
+        style._element.rPr.rFonts.set(qn("w:ascii"), ASCII_FONT)
+        style._element.rPr.rFonts.set(qn("w:hAnsi"), ASCII_FONT)
+        style._element.rPr.rFonts.set(qn("w:eastAsia"), CHINESE_FONT)
         style._element.rPr.rFonts.set(qn("w:hint"), "eastAsia")
         style.font.size = Pt(size)
         style.font.bold = True
@@ -421,11 +425,11 @@ def build_document(base: dict[str, Any]) -> tuple[Document, list[dict[str, Any]]
     title.paragraph_format.space_before = Pt(8)
     title.paragraph_format.space_after = Pt(4)
     title_run = title.add_run("审阅关注点确认单")
-    _set_run_font(title_run, 23, bold=True, color=INK)
+    _set_run_font(title_run, 21, bold=True, color=INK)
     subtitle = doc.add_paragraph()
     subtitle.paragraph_format.space_after = Pt(14)
     subtitle_run = subtitle.add_run("供律师确认｜未经导入验证不得作为最终法律结论")
-    _set_run_font(subtitle_run, 13, bold=True, color=GOLD)
+    _set_run_font(subtitle_run, 10.5, color=GOLD)
     metadata = [
         ("事项编号", base["matter_id"]),
         ("立场", "以基础清单所载审阅立场为准"),

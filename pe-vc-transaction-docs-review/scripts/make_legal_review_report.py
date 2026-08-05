@@ -23,16 +23,16 @@ from build_report_model import report_model_content_sha256, validate_report_mode
 
 
 PRESET = "standard_business_brief"
-ASCII_FONT = "Calibri"
-CHINESE_FONT = "PingFang SC"
-INK = "0B2545"
-BLUE = "2E74B5"
-DARK_BLUE = "1F4D78"
-MUTED = "606B78"
-LIGHT_GRAY = "F2F4F7"
-LIGHT_BLUE = "E8EEF5"
-CAUTION = "7A5A00"
-RISK = "9B1C1C"
+ASCII_FONT = "Times New Roman"
+CHINESE_FONT = "宋体"
+INK = "000000"
+BLUE = "000000"
+DARK_BLUE = "000000"
+MUTED = "666666"
+LIGHT_GRAY = "F2F2F2"
+LIGHT_BLUE = "F2F2F2"
+CAUTION = "000000"
+RISK = "000000"
 USABLE_WIDTH_DXA = 9360
 TABLE_INDENT_DXA = 120
 
@@ -53,12 +53,11 @@ def _set_style_font(style, *, size: float, color: str = "000000", bold: bool | N
 
 def _set_run_font(run, *, size: float | None = None, color: str | None = None,
                   bold: bool | None = None, italic: bool | None = None) -> None:
-    face = CHINESE_FONT if any(ord(character) > 127 for character in run.text) else ASCII_FONT
-    run.font.name = face
+    run.font.name = ASCII_FONT
     rpr = run._element.get_or_add_rPr()
     rfonts = rpr.get_or_add_rFonts()
-    rfonts.set(qn("w:ascii"), face)
-    rfonts.set(qn("w:hAnsi"), face)
+    rfonts.set(qn("w:ascii"), ASCII_FONT)
+    rfonts.set(qn("w:hAnsi"), ASCII_FONT)
     rfonts.set(qn("w:eastAsia"), CHINESE_FONT)
     rfonts.set(qn("w:hint"), "eastAsia")
     language = rpr.find(qn("w:lang"))
@@ -272,10 +271,8 @@ def _status_callout(doc: Document, status: str, matter_status: str) -> None:
     table = doc.add_table(rows=1, cols=1)
     table.style = "Table Grid"
     _set_table_geometry(table, [USABLE_WIDTH_DXA])
-    fill = LIGHT_BLUE if matter_status == "passed" else ("FFF4CE" if matter_status == "passed_with_limitations" else "FDECEC")
-    color = DARK_BLUE if matter_status == "passed" else (CAUTION if matter_status == "passed_with_limitations" else RISK)
-    _shade(table.cell(0, 0), fill)
-    _paragraph(table.cell(0, 0), f"文档状态：{status}", bold=True, color=color, size=11)
+    _shade(table.cell(0, 0), LIGHT_GRAY)
+    _paragraph(table.cell(0, 0), f"文档状态：{status}", bold=True, color=INK, size=11)
 
 
 def _item_blocks(doc: Document, items: list[dict[str, Any]], *, include_change: bool = False) -> None:
@@ -392,7 +389,7 @@ def make_legal_review_report(report_model: Any, approved_content: Any, output: P
     title = doc.add_paragraph()
     title.paragraph_format.space_before = Pt(18)
     title.paragraph_format.space_after = Pt(4)
-    _set_run_font(title.add_run("法律审查报告"), size=25, color=INK, bold=True)
+    _set_run_font(title.add_run("法律审查报告"), size=22, color=INK, bold=True)
     subtitle = doc.add_paragraph()
     subtitle.paragraph_format.space_after = Pt(14)
     _set_run_font(subtitle.add_run("PE/VC 交易文件律师确认版"), size=12, color=MUTED)

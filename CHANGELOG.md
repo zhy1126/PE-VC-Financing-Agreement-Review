@@ -10,5 +10,5 @@
 - 新增 approved-content package、确定性 report model 和最终 Word 报告。
 - 新增 completion schema v2，同时保留 legacy schema v1 读取兼容。
 - 新增确认单和最终报告的 fail-closed Word QA。
+- Word 确认单和最终报告统一为中文宋体、英文及数字 Times New Roman，并改为黑白浅灰的简洁样式。
 - 保持既有 16 个审阅 checkpoint 阶段不变。
-
