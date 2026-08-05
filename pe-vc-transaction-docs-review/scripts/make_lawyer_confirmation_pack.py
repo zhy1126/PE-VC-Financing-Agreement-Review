@@ -428,7 +428,7 @@ def build_document(base: dict[str, Any]) -> tuple[Document, list[dict[str, Any]]
     _set_run_font(title_run, 21, bold=True, color=INK)
     subtitle = doc.add_paragraph()
     subtitle.paragraph_format.space_after = Pt(14)
-    subtitle_run = subtitle.add_run("供律师确认｜未经导入验证不得作为最终法律结论")
+    subtitle_run = subtitle.add_run("内部审阅使用")
     _set_run_font(subtitle_run, 10.5, color=GOLD)
     metadata = [
         ("事项编号", base["matter_id"]),
